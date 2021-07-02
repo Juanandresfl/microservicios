@@ -28,6 +28,7 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-loadbalancer', version: '3.0.3'
 	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-config', version: '3.0.4'
+	implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-netflix-eureka-client', version: '3.0.3'
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.3.9'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
