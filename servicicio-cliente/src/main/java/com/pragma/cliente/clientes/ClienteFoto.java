@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "foto-service",url="localhost:8082/fotos",decode404 = true)
+@FeignClient(name = "servicio-foto", path = "/fotos" , fallback = ClienteHystrixFallback.class)
 public interface ClienteFoto {
 
     @GetMapping
