@@ -81,7 +81,6 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public ClienteDTO save(ClienteDTO clienteDTO) {
         FotoDTO foto = null;
-        System.out.println("CLIENTE ID: "+ clienteDTO.getIdentificacion());
         Cliente cliente = clienteDao.findByIdentificacionAndTipoIdentificacion(clienteDTO.getIdentificacion(),
                 TipoIdentificacion.builder().id(clienteDTO.getTipoIdentificacion().getId()).build());
         if(cliente != null){
@@ -96,6 +95,34 @@ public class ClienteServiceImpl implements ClienteService {
         }
         clienteDao.save(cliente);
         clienteDTO = modelMapper.map(cliente,ClienteDTO.class);
+        clienteDTO.setFotoDTO(foto);
+        return clienteDTO;
+    }
+
+    @Override
+    public ClienteDTO update(ClienteDTO clienteDTO) {
+        FotoDTO foto = null;
+        Cliente cliente = clienteDao.findById(clienteDTO.getIdentificacion()).orElse(null);
+        System.out.println("TIPO :"+ cliente.getTipoIdentificacion().getNombre());
+        if(cliente == null){
+            throw new ClienteException(HttpStatus.BAD_REQUEST, "El cliente no existe en la bd");
+        }
+        if(clienteDTO.getFotoDTO() != null){
+            foto = clienteFoto.buscar(cliente.getFotoId()).getBody();
+            if(foto == null){
+                clienteFoto.registrar(clienteDTO.getFotoDTO()).getBody();
+            }
+            else{
+                foto.setContenido(clienteDTO.getFotoDTO().getContenido());
+                foto.setNombre(clienteDTO.getFotoDTO().getNombre());
+                foto.setTamaño(clienteDTO.getFotoDTO().getTamaño());
+                foto.setTipoContenido(clienteDTO.getFotoDTO().getTipoContenido());
+                clienteFoto.actualizar(foto.getId(), foto);
+            }
+            cliente.setFotoId(foto.getId());
+        }
+        clienteDao.save(cliente);
+        clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
         clienteDTO.setFotoDTO(foto);
         return clienteDTO;
     }

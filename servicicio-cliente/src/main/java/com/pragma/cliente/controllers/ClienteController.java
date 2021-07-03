@@ -30,6 +30,12 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body( clienteService.save(cliente));
     }
 
+    @PutMapping
+    public ResponseEntity<?> actualizarCliente(@RequestBody ClienteDTO cliente){
+        ClienteDTO clienteDTO = clienteService.update(cliente);
+        return ResponseEntity.ok(clienteDTO);
+    }
+
     @GetMapping("/{identificacion}")
     public ResponseEntity<?> buscarPorIdentificacion(@PathVariable String identificacion){
         ClienteDTO clienteDTO = clienteService.findById(identificacion);
