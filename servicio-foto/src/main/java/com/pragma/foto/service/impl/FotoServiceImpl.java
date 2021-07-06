@@ -9,10 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,18 +36,6 @@ public class FotoServiceImpl implements FotoService {
     }
 
     @Override
-    public FotoDTO save(MultipartFile file) throws IOException {
-        Foto foto = new Foto();
-        foto.setContenido(file.getBytes());
-        foto.setTipoContenido(file.getContentType());
-        foto.setNombre(file.getOriginalFilename());
-        foto.setTamaño(file.getSize());
-        fotoDao.save(foto);
-        FotoDTO fotoDTO = modelMapper.map(foto,FotoDTO.class);
-        return fotoDTO;
-    }
-
-    @Override
     public FotoDTO save(FotoDTO fotoDTO) {
         Foto foto = modelMapper.map(fotoDTO,Foto.class);
         foto = fotoDao.save(foto);
@@ -66,22 +51,6 @@ public class FotoServiceImpl implements FotoService {
         throw new FotoException(HttpStatus.NOT_FOUND , "La foto no existe en la bd");
     }
     fotoDTO = modelMapper.map(foto, FotoDTO.class);
-        return fotoDTO;
-    }
-
-    @Override
-    public FotoDTO update(String id, MultipartFile file) throws IOException {
-        Foto foto = fotoDao.findById(id).orElse(null);
-        if(foto == null){
-            throw new FotoException(HttpStatus.NOT_FOUND, "El id de la foto es incorrecto");
-        }
-        String path = Base64.getEncoder().encodeToString(file.getBytes());
-        foto.setTamaño(file.getSize());
-        foto.setNombre(file.getOriginalFilename());
-        foto.setTipoContenido(file.getContentType());
-        foto.setContenido(file.getBytes());
-        fotoDao.save(foto);
-        FotoDTO fotoDTO = modelMapper.map(foto, FotoDTO.class);
         return fotoDTO;
     }
 

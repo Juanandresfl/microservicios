@@ -9,10 +9,9 @@ import java.util.List;
 public interface FotoService {
 
     List<FotoDTO> findAll();
-    FotoDTO save(MultipartFile file) throws IOException;
+//    List<FotoDTO> listByIds(List<String> ids);
     FotoDTO save(FotoDTO fotoDTO);
     FotoDTO findById(String id);
-    FotoDTO update(String id,MultipartFile file) throws IOException;
     FotoDTO update(String id,FotoDTO fotoDTO);
     void delete(String id);
 }

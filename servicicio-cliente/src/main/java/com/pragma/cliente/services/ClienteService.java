@@ -9,5 +9,6 @@ public interface ClienteService {
      ClienteDTO findById(String identificacion);
      ClienteDTO save (ClienteDTO clienteDTO);
      ClienteDTO update(ClienteDTO clienteDTO);
+     List<ClienteDTO> filter(int edad);
      void delete (String identificacion);
 }

@@ -10,7 +10,6 @@ import com.pragma.cliente.repository.IClienteDao;
 import com.pragma.cliente.repository.ITipoidentificacionDao;
 import com.pragma.cliente.services.ClienteService;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.modelmapper.ModelMapper;
@@ -18,11 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 
@@ -49,6 +44,9 @@ public class ClienteServiceImpl implements ClienteService {
     private List<ClienteDTO> findClientes(List<Cliente> clientes){
         ClienteDTO clienteDTO = null;
         List<ClienteDTO> clientesDTO = new ArrayList<ClienteDTO>();
+        if(clienteFoto.listar().getStatusCodeValue() != 200){
+            throw new ClienteException(HttpStatus.BAD_REQUEST , "Error");
+        }
             List<FotoDTO> fotos = clienteFoto.listar().getBody();
             for (int i = 0;i < fotos.size(); i++){
                 for(int j=0; j<clientes.size();j++) {
@@ -125,6 +123,16 @@ public class ClienteServiceImpl implements ClienteService {
         clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
         clienteDTO.setFotoDTO(foto);
         return clienteDTO;
+    }
+
+    @Override
+    public List<ClienteDTO> filter(int edad) {
+        List<Cliente> clientes = null;
+        clientes = clienteDao.findByEdadGreaterThanEqual(edad);
+        if(clientes.isEmpty()){
+            throw new ClienteException(HttpStatus.NOT_FOUND, "No hay clientes en ese rango de edad");
+        }
+        return findClientes(clientes);
     }
 
     @Override

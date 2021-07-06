@@ -5,13 +5,12 @@ import com.pragma.foto.service.FotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/fotos")
+@CrossOrigin(methods = {RequestMethod.GET, RequestMethod.POST , RequestMethod.DELETE, RequestMethod.PUT})
 public class FotoController {
 
     @Autowired
@@ -35,22 +34,10 @@ public class FotoController {
         return ResponseEntity.ok(fotoDto);
     }
 
-    @PostMapping("/cargar")
-    public ResponseEntity<FotoDTO> registrar(@RequestParam("file") MultipartFile file) throws IOException {
-        FotoDTO fotoDTO = fotoService.save(file);
-        return ResponseEntity.ok(fotoDTO);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<FotoDTO> actualizar(@PathVariable String id, @RequestBody FotoDTO fotoDTO){
         FotoDTO fotoDto = fotoService.update(id,fotoDTO);
         return ResponseEntity.ok(fotoDto);
-    }
-
-    @PutMapping("cargar/{id}")
-    public ResponseEntity<FotoDTO> actualizar(@PathVariable String id, @RequestParam("file") MultipartFile file) throws IOException {
-        FotoDTO fotoDTO = fotoService.update(id,file);
-        return ResponseEntity.ok(fotoDTO);
     }
 
     @DeleteMapping("/{id}")

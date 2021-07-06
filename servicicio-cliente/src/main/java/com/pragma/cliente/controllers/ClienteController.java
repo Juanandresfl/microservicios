@@ -7,14 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/cliente")
-@CrossOrigin("*")
+@CrossOrigin(methods = {RequestMethod.GET, RequestMethod.POST , RequestMethod.DELETE, RequestMethod.PUT})
 public class ClienteController {
 
     @Autowired
@@ -23,6 +20,11 @@ public class ClienteController {
     @GetMapping
     public ResponseEntity<?> listarClientes(){
         return ResponseEntity.ok(clienteService.findAll());
+    }
+
+    @GetMapping("/filtrar/{edad}")
+    public ResponseEntity<?>filtratClientes(@PathVariable int edad){
+        return ResponseEntity.ok(clienteService.filter(edad));
     }
 
     @PostMapping

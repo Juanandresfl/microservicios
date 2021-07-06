@@ -1,7 +1,9 @@
 package com.pragma.foto.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public class FotoException extends RuntimeException {
     private HttpStatus httpStatus;
 
