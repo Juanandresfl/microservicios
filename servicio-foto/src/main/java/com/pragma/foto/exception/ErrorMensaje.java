@@ -1,9 +1,12 @@
 package com.pragma.foto.exception;
 
-import lombok.*;
 
-@Getter
-@Setter
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
