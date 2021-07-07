@@ -1,6 +1,5 @@
 package com.pragma.cliente.controllers;
 
-import com.pragma.cliente.entities.Cliente;
 import com.pragma.cliente.model.ClienteDTO;
 import com.pragma.cliente.services.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ public class ClienteController {
     }
 
     @GetMapping("/filtrar/{edad}")
-    public ResponseEntity<?>filtratClientes(@PathVariable int edad){
+    public ResponseEntity<?>filtrarClientes(@PathVariable int edad){
         return ResponseEntity.ok(clienteService.filter(edad));
     }
 
@@ -44,8 +43,8 @@ public class ClienteController {
         return ResponseEntity.ok(clienteDTO);
     }
 
-    @DeleteMapping
-    public ResponseEntity<?> eliminarCliente(String identificacion){
+    @DeleteMapping("/{identificacion}")
+    public ResponseEntity<?> eliminarCliente(@PathVariable String identificacion){
        clienteService.delete(identificacion);
         return ResponseEntity.ok().build();
     }

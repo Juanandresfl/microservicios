@@ -18,5 +18,5 @@ public class ClienteDTO {
     private String apellido;
     private Integer edad;
     private String ciudad;
-    private FotoDTO fotoDTO;
+    private FotoDTO foto;
 }

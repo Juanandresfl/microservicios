@@ -16,12 +16,12 @@ public class ErrorController {
     private static final Map<String, Integer> STATUS = new HashMap<>();
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<ErrorMensaje> handleAllExceptions(HttpServletRequest request, Exception exception) {
+    public final ResponseEntity<ErrorMensaje> AllExceptions(HttpServletRequest request, Exception exception) {
         ResponseEntity<ErrorMensaje> resultado;
 
         String excepcion = exception.getClass().getSimpleName();
         String mensaje = exception.getMessage();
-        Integer codigo = getStatusCode(exception);
+        Integer codigo = getStatus(exception);
 
         if (codigo == null) {
             codigo = HttpStatus.INTERNAL_SERVER_ERROR.value();
@@ -34,7 +34,7 @@ public class ErrorController {
         return resultado;
     }
 
-    private Integer getStatusCode(Exception e) {
+    private Integer getStatus(Exception e) {
         if (e instanceof ClienteException) {
             ClienteException ex = (ClienteException) e;
             if (ex.getHttpStatus() != null) {

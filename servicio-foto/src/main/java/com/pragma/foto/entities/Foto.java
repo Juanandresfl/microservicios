@@ -17,6 +17,5 @@ public class Foto {
     private String id;
     private String nombre;
     private byte[] contenido;
-    private long tamaño;
     private String tipoContenido;
 }

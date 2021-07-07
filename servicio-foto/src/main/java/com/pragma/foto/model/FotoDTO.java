@@ -13,6 +13,5 @@ public class FotoDTO {
     private String id;
     private String nombre;
     private byte[] contenido;
-    private long tamaño;
     private String tipoContenido;
 }

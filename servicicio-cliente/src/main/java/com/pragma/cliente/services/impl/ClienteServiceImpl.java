@@ -44,15 +44,12 @@ public class ClienteServiceImpl implements ClienteService {
     private List<ClienteDTO> findClientes(List<Cliente> clientes){
         ClienteDTO clienteDTO = null;
         List<ClienteDTO> clientesDTO = new ArrayList<ClienteDTO>();
-        if(clienteFoto.listar().getStatusCodeValue() != 200){
-            throw new ClienteException(HttpStatus.BAD_REQUEST , "Error");
-        }
             List<FotoDTO> fotos = clienteFoto.listar().getBody();
             for (int i = 0;i < fotos.size(); i++){
                 for(int j=0; j<clientes.size();j++) {
                     if (clientes.get(j).getFotoId().equals(fotos.get(i).getId())) {
                         clienteDTO = modelMapper.map(clientes.get(j), ClienteDTO.class);
-                        clienteDTO.setFotoDTO(fotos.get(i));
+                        clienteDTO.setFoto(fotos.get(i));
                         clientesDTO.add(clienteDTO);
                     }
                 }
@@ -71,7 +68,7 @@ public class ClienteServiceImpl implements ClienteService {
         clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
         if(cliente.getFotoId() != null){
             FotoDTO fotoDTO = clienteFoto.buscar(cliente.getFotoId()).getBody();
-            clienteDTO.setFotoDTO(fotoDTO);
+            clienteDTO.setFoto(fotoDTO);
         }
         return clienteDTO;
     }
@@ -85,15 +82,15 @@ public class ClienteServiceImpl implements ClienteService {
             throw new ClienteException(HttpStatus.BAD_REQUEST, "El cliente ya existe en la bd");
         }
         cliente = modelMapper.map(clienteDTO,Cliente.class);
-        if(clienteDTO.getFotoDTO() != null){
-            foto = clienteFoto.registrar(clienteDTO.getFotoDTO()).getBody();
+        if(clienteDTO.getFoto() != null){
+            foto = clienteFoto.registrar(clienteDTO.getFoto()).getBody();
             if(foto!= null){
                 cliente.setFotoId(foto.getId());
             }
         }
         clienteDao.save(cliente);
         clienteDTO = modelMapper.map(cliente,ClienteDTO.class);
-        clienteDTO.setFotoDTO(foto);
+        clienteDTO.setFoto(foto);
         return clienteDTO;
     }
 
@@ -105,23 +102,27 @@ public class ClienteServiceImpl implements ClienteService {
         if(cliente == null){
             throw new ClienteException(HttpStatus.BAD_REQUEST, "El cliente no existe en la bd");
         }
-        if(clienteDTO.getFotoDTO() != null){
+        cliente.setNombre(clienteDTO.getNombre());
+        cliente.setApellido(clienteDTO.getApellido());
+        cliente.setCiudad(clienteDTO.getCiudad());
+        cliente.setEdad(clienteDTO.getEdad());
+
+        if(clienteDTO.getFoto() != null){
             foto = clienteFoto.buscar(cliente.getFotoId()).getBody();
             if(foto == null){
-                clienteFoto.registrar(clienteDTO.getFotoDTO()).getBody();
+                clienteFoto.registrar(clienteDTO.getFoto()).getBody();
             }
             else{
-                foto.setContenido(clienteDTO.getFotoDTO().getContenido());
-                foto.setNombre(clienteDTO.getFotoDTO().getNombre());
-                foto.setTamaño(clienteDTO.getFotoDTO().getTamaño());
-                foto.setTipoContenido(clienteDTO.getFotoDTO().getTipoContenido());
+                foto.setContenido(clienteDTO.getFoto().getContenido());
+                foto.setNombre(clienteDTO.getFoto().getNombre());
+                foto.setTipoContenido(clienteDTO.getFoto().getTipoContenido());
                 clienteFoto.actualizar(foto.getId(), foto);
             }
             cliente.setFotoId(foto.getId());
         }
         clienteDao.save(cliente);
         clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
-        clienteDTO.setFotoDTO(foto);
+        clienteDTO.setFoto(foto);
         return clienteDTO;
     }
 
@@ -141,6 +142,8 @@ public class ClienteServiceImpl implements ClienteService {
         if(cliente == null){
             throw new ClienteException(HttpStatus.NOT_FOUND , "El cliente no existe en la bd");
         }
+
+        clienteFoto.eliminar(cliente.getFotoId());
         clienteDao.delete(cliente);
     }
 }
