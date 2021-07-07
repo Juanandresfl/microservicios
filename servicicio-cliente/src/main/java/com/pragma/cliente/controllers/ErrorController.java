@@ -1,7 +1,7 @@
 package com.pragma.cliente.controllers;
 
 import com.pragma.cliente.exception.ClienteException;
-import com.pragma.cliente.exception.ErrorMensaje;
+import com.pragma.cliente.exception.MensajeError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,8 +16,8 @@ public class ErrorController {
     private static final Map<String, Integer> STATUS = new HashMap<>();
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<ErrorMensaje> AllExceptions(HttpServletRequest request, Exception exception) {
-        ResponseEntity<ErrorMensaje> resultado;
+    public final ResponseEntity<MensajeError> AllExceptions(HttpServletRequest request, Exception exception) {
+        ResponseEntity<MensajeError> resultado;
 
         String excepcion = exception.getClass().getSimpleName();
         String mensaje = exception.getMessage();
@@ -27,7 +27,7 @@ public class ErrorController {
             codigo = HttpStatus.INTERNAL_SERVER_ERROR.value();
         }
 
-        ErrorMensaje error = ErrorMensaje.builder().mensaje(mensaje).excepcion(excepcion)
+        MensajeError error = MensajeError.builder().mensaje(mensaje).excepcion(excepcion)
                 .url(request.getRequestURI()).status(codigo).build();
         resultado = new ResponseEntity<>(error, HttpStatus.valueOf(codigo));
         exception.printStackTrace();

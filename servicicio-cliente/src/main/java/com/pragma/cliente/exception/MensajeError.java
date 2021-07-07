@@ -1,4 +1,4 @@
-package com.pragma.foto.exception;
+package com.pragma.cliente.exception;
 
 
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErrorMensaje {
+public class MensajeError {
 
     private String mensaje;
 
@@ -21,4 +21,3 @@ public class ErrorMensaje {
     private int status;
 
 }
-

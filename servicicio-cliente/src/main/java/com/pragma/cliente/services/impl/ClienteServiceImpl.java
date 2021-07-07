@@ -18,10 +18,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class ClienteServiceImpl implements ClienteService {
 
     @Autowired
@@ -41,32 +42,32 @@ public class ClienteServiceImpl implements ClienteService {
         return findClientes(clientes);
     }
 
-    private List<ClienteDTO> findClientes(List<Cliente> clientes){
+    private List<ClienteDTO> findClientes(List<Cliente> clientes) {
         ClienteDTO clienteDTO = null;
         List<ClienteDTO> clientesDTO = new ArrayList<ClienteDTO>();
-            List<FotoDTO> fotos = clienteFoto.listar().getBody();
-            for (int i = 0;i < fotos.size(); i++){
-                for(int j=0; j<clientes.size();j++) {
-                    if (clientes.get(j).getFotoId().equals(fotos.get(i).getId())) {
-                        clienteDTO = modelMapper.map(clientes.get(j), ClienteDTO.class);
-                        clienteDTO.setFoto(fotos.get(i));
-                        clientesDTO.add(clienteDTO);
-                    }
+        List<FotoDTO> fotos = clienteFoto.listar().getBody();
+        for (int i = 0; i < fotos.size(); i++) {
+            for (int j = 0; j < clientes.size(); j++) {
+                if (clientes.get(j).getFotoId().equals(fotos.get(i).getId())) {
+                    clienteDTO = modelMapper.map(clientes.get(j), ClienteDTO.class);
+                    clienteDTO.setFoto(fotos.get(i));
+                    clientesDTO.add(clienteDTO);
                 }
             }
-            return clientesDTO;
         }
+        return clientesDTO;
+    }
 
 
     @Override
     public ClienteDTO findById(String identificacion) {
         ClienteDTO clienteDTO = null;
-        Cliente cliente  = clienteDao.findById(identificacion).orElse(null);
-        if(cliente == null){
+        Cliente cliente = clienteDao.findById(identificacion).orElse(null);
+        if (cliente == null) {
             throw new ClienteException(HttpStatus.NOT_FOUND, "cliente no existe en la bd");
         }
         clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
-        if(cliente.getFotoId() != null){
+        if (cliente.getFotoId() != null) {
             FotoDTO fotoDTO = clienteFoto.buscar(cliente.getFotoId()).getBody();
             clienteDTO.setFoto(fotoDTO);
         }
@@ -78,18 +79,17 @@ public class ClienteServiceImpl implements ClienteService {
         FotoDTO foto = null;
         Cliente cliente = clienteDao.findByIdentificacionAndTipoIdentificacion(clienteDTO.getIdentificacion(),
                 TipoIdentificacion.builder().id(clienteDTO.getTipoIdentificacion().getId()).build());
-        if(cliente != null){
+        if (cliente != null) {
             throw new ClienteException(HttpStatus.BAD_REQUEST, "El cliente ya existe en la bd");
         }
-        cliente = modelMapper.map(clienteDTO,Cliente.class);
-        if(clienteDTO.getFoto() != null){
-            foto = clienteFoto.registrar(clienteDTO.getFoto()).getBody();
-            if(foto!= null){
-                cliente.setFotoId(foto.getId());
-            }
+        cliente = modelMapper.map(clienteDTO, Cliente.class);
+        if (clienteDTO.getFoto() == null) {
+            throw new ClienteException(HttpStatus.BAD_REQUEST, "El cliente no se puede guardar sin foto");
         }
+        foto = clienteFoto.registrar(clienteDTO.getFoto()).getBody();
+        cliente.setFotoId(foto.getId());
         clienteDao.save(cliente);
-        clienteDTO = modelMapper.map(cliente,ClienteDTO.class);
+        clienteDTO = modelMapper.map(cliente, ClienteDTO.class);
         clienteDTO.setFoto(foto);
         return clienteDTO;
     }
@@ -98,8 +98,8 @@ public class ClienteServiceImpl implements ClienteService {
     public ClienteDTO update(ClienteDTO clienteDTO) {
         FotoDTO foto = null;
         Cliente cliente = clienteDao.findById(clienteDTO.getIdentificacion()).orElse(null);
-        System.out.println("TIPO :"+ cliente.getTipoIdentificacion().getNombre());
-        if(cliente == null){
+        System.out.println("TIPO :" + cliente.getTipoIdentificacion().getNombre());
+        if (cliente == null) {
             throw new ClienteException(HttpStatus.BAD_REQUEST, "El cliente no existe en la bd");
         }
         cliente.setNombre(clienteDTO.getNombre());
@@ -107,17 +107,12 @@ public class ClienteServiceImpl implements ClienteService {
         cliente.setCiudad(clienteDTO.getCiudad());
         cliente.setEdad(clienteDTO.getEdad());
 
-        if(clienteDTO.getFoto() != null){
+        if (clienteDTO.getFoto() != null) {
             foto = clienteFoto.buscar(cliente.getFotoId()).getBody();
-            if(foto == null){
-                clienteFoto.registrar(clienteDTO.getFoto()).getBody();
-            }
-            else{
-                foto.setContenido(clienteDTO.getFoto().getContenido());
-                foto.setNombre(clienteDTO.getFoto().getNombre());
-                foto.setTipoContenido(clienteDTO.getFoto().getTipoContenido());
-                clienteFoto.actualizar(foto.getId(), foto);
-            }
+            foto.setContenido(clienteDTO.getFoto().getContenido());
+            foto.setNombre(clienteDTO.getFoto().getNombre());
+            foto.setTipoContenido(clienteDTO.getFoto().getTipoContenido());
+            clienteFoto.actualizar(foto.getId(), foto);
             cliente.setFotoId(foto.getId());
         }
         clienteDao.save(cliente);
@@ -130,7 +125,7 @@ public class ClienteServiceImpl implements ClienteService {
     public List<ClienteDTO> filter(int edad) {
         List<Cliente> clientes = null;
         clientes = clienteDao.findByEdadGreaterThanEqual(edad);
-        if(clientes.isEmpty()){
+        if (clientes.isEmpty()) {
             throw new ClienteException(HttpStatus.NOT_FOUND, "No hay clientes en ese rango de edad");
         }
         return findClientes(clientes);
@@ -139,8 +134,8 @@ public class ClienteServiceImpl implements ClienteService {
     @Override
     public void delete(String identificacion) {
         Cliente cliente = clienteDao.findById(identificacion).orElse(null);
-        if(cliente == null){
-            throw new ClienteException(HttpStatus.NOT_FOUND , "El cliente no existe en la bd");
+        if (cliente == null) {
+            throw new ClienteException(HttpStatus.NOT_FOUND, "El cliente no existe en la bd");
         }
 
         clienteFoto.eliminar(cliente.getFotoId());
