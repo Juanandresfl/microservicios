@@ -34,6 +34,12 @@ public class FotoController {
         return ResponseEntity.ok(fotoDto);
     }
 
+    @PostMapping("/ids")
+    public ResponseEntity<List<FotoDTO>> listarPorIds(@RequestBody (required = true) List<String> ids){
+        List<FotoDTO> fotos = fotoService.listByIds(ids);
+        return ResponseEntity.ok(fotos);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<FotoDTO> actualizar(@PathVariable String id, @RequestBody FotoDTO fotoDTO){
         FotoDTO fotoDto = fotoService.update(id,fotoDTO);

@@ -25,6 +25,12 @@ public class ClienteHystrixFallback implements ClienteFoto{
     }
 
     @Override
+    public ResponseEntity<List<FotoDTO>> listarPorIds(List<String> ids) {
+        List<FotoDTO> fotos = new ArrayList<>();
+        return ResponseEntity.ok(fotos);
+    }
+
+    @Override
     public ResponseEntity<FotoDTO> actualizar(String id, FotoDTO fotoDTO) {
         return ResponseEntity.ok(new FotoDTO());
     }

@@ -9,7 +9,7 @@ import java.util.List;
 public interface FotoService {
 
     List<FotoDTO> findAll();
-//    List<FotoDTO> listByIds(List<String> ids);
+    List<FotoDTO> listByIds(List<String> ids);
     FotoDTO save(FotoDTO fotoDTO);
     FotoDTO findById(String id);
     FotoDTO update(String id,FotoDTO fotoDTO);

@@ -19,6 +19,9 @@ public interface ClienteFoto {
     @PostMapping
     public ResponseEntity<FotoDTO> registrar(@RequestBody FotoDTO fotoDTO);
 
+    @PostMapping("/ids")
+    public ResponseEntity<List<FotoDTO>> listarPorIds(@RequestBody List<String> ids);
+
     @PutMapping("/{id}")
     public ResponseEntity<FotoDTO> actualizar(@PathVariable String id,@RequestBody FotoDTO fotoDTO);
 

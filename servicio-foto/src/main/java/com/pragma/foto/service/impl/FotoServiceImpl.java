@@ -36,6 +36,20 @@ public class FotoServiceImpl implements FotoService {
     }
 
     @Override
+    public List<FotoDTO> listByIds(List<String> ids) {
+        List<FotoDTO> fotosDTO = null;
+        List<Foto> fotos = fotoDao.findByIdIn(ids);
+        if(fotos.isEmpty()){
+            throw new FotoException(HttpStatus.NO_CONTENT, "No hay fotos");
+        }
+        fotosDTO = fotos.stream().map(foto -> {
+            return modelMapper.map(foto, FotoDTO.class);
+        }).collect(Collectors.toList());
+
+        return fotosDTO;
+    }
+
+    @Override
     public FotoDTO save(FotoDTO fotoDTO) {
         Foto foto = modelMapper.map(fotoDTO,Foto.class);
         foto = fotoDao.save(foto);

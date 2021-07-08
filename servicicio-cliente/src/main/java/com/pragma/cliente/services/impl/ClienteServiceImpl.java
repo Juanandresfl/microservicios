@@ -9,7 +9,6 @@ import com.pragma.cliente.model.FotoDTO;
 import com.pragma.cliente.repository.IClienteDao;
 import com.pragma.cliente.repository.ITipoidentificacionDao;
 import com.pragma.cliente.services.ClienteService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.modelmapper.ModelMapper;
@@ -17,12 +16,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 
-//@RequiredArgsConstructor
 public class ClienteServiceImpl implements ClienteService {
 
     @Autowired
@@ -45,14 +46,22 @@ public class ClienteServiceImpl implements ClienteService {
     private List<ClienteDTO> findClientes(List<Cliente> clientes) {
         ClienteDTO clienteDTO = null;
         List<ClienteDTO> clientesDTO = new ArrayList<ClienteDTO>();
-        List<FotoDTO> fotos = clienteFoto.listar().getBody();
-        for (int i = 0; i < fotos.size(); i++) {
-            for (int j = 0; j < clientes.size(); j++) {
-                if (clientes.get(j).getFotoId().equals(fotos.get(i).getId())) {
-                    clienteDTO = modelMapper.map(clientes.get(j), ClienteDTO.class);
-                    clienteDTO.setFoto(fotos.get(i));
-                    clientesDTO.add(clienteDTO);
-                }
+        List<String> ids = new ArrayList<String>();
+        if (!clientes.isEmpty()) {
+            Map<String, ClienteDTO> map = new HashMap<String, ClienteDTO>();
+            for (Cliente c : clientes) {
+                clienteDTO = modelMapper.map(c, ClienteDTO.class);
+                ids.add(c.getFotoId());
+                map.put(c.getFotoId(), clienteDTO);
+            }
+            List<FotoDTO> fotos = clienteFoto.listarPorIds(ids).getBody();
+            Map<String, FotoDTO> mapFotos = fotos.stream().collect(Collectors.
+                    toMap(FotoDTO::getId, Function.identity()));
+            for (Map.Entry<String, ClienteDTO> cliente : map.entrySet()) {
+                clienteDTO = cliente.getValue();
+                FotoDTO foto = mapFotos.get(clienteDTO.getFoto().getId());
+                clienteDTO.setFoto(foto);
+                clientesDTO.add(clienteDTO);
             }
         }
         return clientesDTO;
