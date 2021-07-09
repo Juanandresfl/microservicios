@@ -29,33 +29,33 @@ public class Datos {
 
     public static Cliente getCliente(){
         return Cliente.builder().identificacion("12345")
+                .tipoIdentificacion(TipoIdentificacion.builder().id(1L).nombre("C.C").build())
                 .nombre("prueba")
                 .apellido("pragma")
                 .edad(20)
                 .ciudad("medellin")
-                .tipoIdentificacion(TipoIdentificacion.builder().id(1L).build())
                 .fotoId("01")
                 .build();
     }
 
     public static ClienteDTO getClienteDTO(){
         return ClienteDTO.builder().identificacion("12345")
+               .tipoIdentificacion(TipoIdentificacion.builder().id(1L).nombre("C.C").build())
                 .nombre("prueba")
                 .apellido("pragma")
                 .edad(20)
                 .ciudad("medellin")
-                .tipoIdentificacion(TipoIdentificacion.builder().id(1L).build())
                 .foto(getFoto())
                 .build();
     }
 
     public static Cliente getCliente2(){
         return Cliente.builder().identificacion("12346")
+                .tipoIdentificacion(TipoIdentificacion.builder().id(2L).nombre("T.I").build())
                 .nombre("prueba2")
                 .apellido("pragma2")
                 .edad(22)
                 .ciudad("manizales")
-                .tipoIdentificacion(TipoIdentificacion.builder().id(2L).build())
                 .fotoId("02")
                 .build();
     }

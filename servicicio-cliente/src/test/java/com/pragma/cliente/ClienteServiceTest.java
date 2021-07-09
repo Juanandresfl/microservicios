@@ -129,4 +129,25 @@ public class ClienteServiceTest {
          verify(clienteDao).findByEdadGreaterThanEqual(anyInt());
      }
 
+     @Test
+    void testActualizarCliente(){
+        Mockito.when(clienteDao.findById("12345"))
+                .thenReturn(java.util.Optional.ofNullable(getCliente()));
+        Mockito.when(clienteDao.save(any(Cliente.class))).thenReturn(getCliente());
+
+        Mockito.when(clienteFoto.buscar(anyString())).thenReturn(ResponseEntity.ok(getFoto()));
+        Mockito.when(clienteFoto.actualizar(anyString(), any(FotoDTO.class))).thenReturn(ResponseEntity.ok(getFoto()));
+
+        ClienteDTO clienteDTO = clienteService.update(getClienteDTO());
+
+        assertNotNull(clienteDTO);
+        assertNotNull(clienteDTO.getFoto());
+
+        assertEquals("01", clienteDTO.getFoto().getId());
+        assertEquals("prueba", clienteDTO.getNombre());
+
+        verify(clienteDao).save(any(Cliente.class));
+        verify(clienteFoto).buscar(anyString());
+        verify(clienteFoto).actualizar(anyString(), any(FotoDTO.class));
+     }
 }
