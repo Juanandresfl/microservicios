@@ -9,6 +9,7 @@ import com.pragma.cliente.model.FotoDTO;
 import com.pragma.cliente.repository.IClienteDao;
 import com.pragma.cliente.repository.ITipoidentificacionDao;
 import com.pragma.cliente.services.ClienteService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.modelmapper.ModelMapper;
@@ -23,17 +24,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-
+@RequiredArgsConstructor
 public class ClienteServiceImpl implements ClienteService {
 
     @Autowired
-    private ClienteFoto clienteFoto;
+    private final ClienteFoto clienteFoto;
 
     @Autowired
-    private IClienteDao clienteDao;
-
-    @Autowired
-    private ITipoidentificacionDao tipoidentificacionDao;
+    private final IClienteDao clienteDao;
 
     private ModelMapper modelMapper = new ModelMapper();
 
