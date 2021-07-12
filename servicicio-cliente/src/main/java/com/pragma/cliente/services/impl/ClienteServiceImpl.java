@@ -133,7 +133,7 @@ public class ClienteServiceImpl implements ClienteService {
         List<Cliente> clientes = null;
         clientes = clienteDao.findByEdadGreaterThanEqual(edad);
         if (clientes.isEmpty()) {
-            throw new ClienteException(HttpStatus.NOT_FOUND, "No hay clientes en ese rango de edad");
+            throw new ClienteException(HttpStatus.NO_CONTENT, "No hay clientes en ese rango de edad");
         }
         return findClientes(clientes);
     }
