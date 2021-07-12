@@ -109,6 +109,9 @@ public class ClienteServiceImpl implements ClienteService {
         if (cliente == null) {
             throw new ClienteException(HttpStatus.BAD_REQUEST, "El cliente no existe en la bd");
         }
+        if(cliente.getTipoIdentificacion() == null){
+            throw new ClienteException(HttpStatus.BAD_REQUEST, "El cliente no se puede registrar sin tipo de identificacion");
+        }
         cliente.setNombre(clienteDTO.getNombre());
         cliente.setApellido(clienteDTO.getApellido());
         cliente.setCiudad(clienteDTO.getCiudad());
