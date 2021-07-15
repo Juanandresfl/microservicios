@@ -11,4 +11,5 @@ spring:
     gateway:
       discovery:
         locator:
+          lower-case-service-id: true
           enabled: true
