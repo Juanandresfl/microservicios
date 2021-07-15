@@ -1,4 +1,4 @@
-package com.pragma.cliente;
+package com.pragma.foto;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ public class SwaggerConfig {
     @Bean
     public Docket swaggerModuleLoginApi() {
         return new Docket(DocumentationType.SWAGGER_2).select()
-                .apis(RequestHandlerSelectors.basePackage("com.pragma.cliente.controllers"))
+                .apis(RequestHandlerSelectors.basePackage("com.pragma.foto.controllers"))
                 .paths(PathSelectors.any())
                 .build();
     }

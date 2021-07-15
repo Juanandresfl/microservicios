@@ -7,7 +7,6 @@ import com.pragma.cliente.exception.ClienteException;
 import com.pragma.cliente.model.ClienteDTO;
 import com.pragma.cliente.model.FotoDTO;
 import com.pragma.cliente.repository.IClienteDao;
-import com.pragma.cliente.repository.ITipoidentificacionDao;
 import com.pragma.cliente.services.ClienteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
