@@ -23,3 +23,5 @@ spring:
             - Path=/fotos/**
         - id: servicio-gateway
           uri: lb://servicio-gateway
+          predicates:
+            - Path=/**
