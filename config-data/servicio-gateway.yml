@@ -12,16 +12,3 @@ spring:
       discovery:
         locator:
           enabled: true
-      routes:
-        - id: servicio-cliente
-          uri: lb://servicio-cliente
-          predicates:
-            - Path=/cliente/**
-        - id: servicio-foto
-          uri: lb://servicio-foto
-          predicates:
-            - Path=/fotos/**
-        - id: servicio-gateway
-          uri: lb://servicio-gateway
-          predicates:
-            - Path=/**
